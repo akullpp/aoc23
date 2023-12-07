@@ -1,4 +1,4 @@
-package d1
+package main
 
 import (
 	"bufio"
@@ -31,7 +31,6 @@ func d1p1(filename string) int {
 		n, _ := strconv.Atoi(s)
 		sum += n
 	}
-	fmt.Println("Sum:", sum)
 	return sum
 }
 
@@ -71,6 +70,5 @@ func d1p2(filename string) int {
 		n, _ := strconv.Atoi(s)
 		sum += n
 	}
-	fmt.Println("Sum:", sum)
 	return sum
 }
