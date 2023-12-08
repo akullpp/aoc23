@@ -1,34 +1,23 @@
 package main
 
 import (
-	"bufio"
-	"log"
-	"os"
 	"regexp"
 	"strconv"
 )
 
-// Observations:
-// Games are listed sequentially, no need to parse the id
-// The cubes are returned after each draw...
 func d2p1(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	lines := read(filename)
 
 	result := 0
-	n := 1
+	// The games are listed sequentially, so we don't need to parse the ID
 	re := regexp.MustCompile(`(\d+)\s(\w+)`)
-	for scanner.Scan() {
-		line := scanner.Text()
+	for i, line := range lines {
 		skip := false
 		for _, m := range re.FindAllStringSubmatch(line, -1) {
 			color := m[2]
 			value, _ := strconv.Atoi(m[1])
 
+			// The cubes are returned after each draw, this cost me so much time...
 			if (color == "red" && value > 12) ||
 				(color == "green" && value > 13) ||
 				(color == "blue" && value > 14) {
@@ -37,25 +26,18 @@ func d2p1(filename string) int {
 			}
 		}
 		if !skip {
-			result += n
+			result += i + 1
 		}
-		n++
 	}
 	return result
 }
 
 func d2p2(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	lines := read(filename)
 
 	result := 0
 	re := regexp.MustCompile(`(\d+)\s(\w+)`)
-	for scanner.Scan() {
-		line := scanner.Text()
+	for _, line := range lines {
 		config := map[string]int{
 			"red":   0,
 			"green": 0,

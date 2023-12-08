@@ -1,9 +1,6 @@
 package main
 
 import (
-	"bufio"
-	"log"
-	"os"
 	"regexp"
 	"strconv"
 )
@@ -22,17 +19,7 @@ func check(line string, i_end int, i_start int) bool {
 }
 
 func d3p1(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-
-	lines := []string{}
-	for i := 0; scanner.Scan(); i++ {
-		lines = append(lines, scanner.Text())
-	}
+	lines := read(filename)
 
 	result := 0
 	re := regexp.MustCompile(`(\d+)`)

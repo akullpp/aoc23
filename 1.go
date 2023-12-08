@@ -1,32 +1,22 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-// Observations:
-// - there's at least one number per line
-// - there's never a 0
-// - if there's only one number, it is used twice
 func d1p1(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	lines := read(filename)
 
 	sum := 0
+	// There's never a 0
 	re := regexp.MustCompile("[1-9]")
-	for scanner.Scan() {
-		line := scanner.Text()
+	for _, line := range lines {
+		// There's at least one number per line, so no need to check
 		xs := re.FindAllString(line, -1)
+		// If there's only one number, it is used twice, e.g. 9sixonefour -> 99
 		s := fmt.Sprintf("%s%s", xs[0], xs[len(xs)-1])
 		n, _ := strconv.Atoi(s)
 		sum += n
@@ -34,18 +24,12 @@ func d1p1(filename string) int {
 	return sum
 }
 
-// Only difference to d1p1 is line 49-60 and 63-68
 func d1p2(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	lines := read(filename)
 
 	sum := 0
 	re := regexp.MustCompile("[1-9]")
-	// Trick for overlap, e.g. eightwone -> e8twone -> e8t2one -> e8t2o1e
+	// Trick for the overlap, e.g. eightwone -> e8twone -> e8t2one -> e8t2o1e
 	replacer := strings.NewReplacer(
 		"one", "o1e",
 		"two", "t2o",
@@ -57,10 +41,10 @@ func d1p2(filename string) int {
 		"eight", "e8t",
 		"nine", "n9e",
 	)
-	for scanner.Scan() {
-		line := scanner.Text()
+	for _, line := range lines {
 		before := line
 		after := replacer.Replace(before)
+		// Replace until there's nothing more to replace
 		for before != after {
 			before = after
 			after = replacer.Replace(before)
